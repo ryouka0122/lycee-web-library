@@ -1,0 +1,72 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'war'
+
+ext {
+	tomcat_home = System.getenv()['TOMCAT_HOME']
+	war_name = 'lycee-web-library.war'
+	
+}
+
+group = 'net.coolblossom.lycee.app'
+version = '0.0.1-PROTOTYPE'
+description = 'Lycee Web Library'
+
+sourceSets {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+	
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+}
+
+def runCommand(d, f) {
+	ProcessBuilder pb = new ProcessBuilder('cmd', '/C', f)
+	pb.directory(file(d))
+	pb.start()
+}
+
+war {
+	archiveName = war_name
+}
+
+task deploy(type: Copy) {
+	from 'build/libs'
+	into tomcat_home + '/webapps'
+	include '**/' + war_name
+}
+
+task shutdown {
+	doLast {
+		runCommand(tomcat_home + '/bin', 'shutdown.bat')
+	}
+}
+
+task clear(type: Delete) {
+	delete fileTree(dir: tomcat_home + '/webapps', include: war_name)
+}
+
+task startup {
+	doLast {
+		runCommand(tomcat_home + '/bin', 'startup.bat')
+	}
+}
+
+task reboot(dependsOn: [shutdown, startup]) {
+	
+}
+
