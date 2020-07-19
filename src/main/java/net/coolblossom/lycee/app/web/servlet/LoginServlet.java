@@ -6,13 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class IndexServlet extends AbstractServlet {
+public class LoginServlet extends AbstractServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		forward(req, resp, "index.jsp");
+		forward(req, resp, "login/index.jsp");
 	}
+
 
 }
