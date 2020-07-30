@@ -1,12 +1,18 @@
 
+
+plugins {
+	id 'org.springframework.boot' version '2.2.4.RELEASE'
+	id "io.freefair.lombok" version "5.1.0"
+}
+
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'groovy'
 apply plugin: 'war'
+apply plugin: 'io.spring.dependency-management'
 
 ext {
 	tomcat_home = System.getenv()['TOMCAT_HOME']
 	war_name = 'lycee-web-library.war'
-	
 }
 
 group = 'net.coolblossom.lycee.app'
@@ -18,58 +24,51 @@ sourceSets {
 	targetCompatibility = '1.8'
 	
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-	
+	test {
+		java {
+			srcDir 'src/test/groovy'
+		}
+	}
 }
+
+//tasks.withType(AbstractCompile)*.options*.encoding = tasks.withType(GroovyCompile)*.groovyOptions*.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+
+	implementation group: 'com.google.guava', name:'guava', version: '29.0-jre'
+
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.1.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.3.1.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.3.1.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.1.RELEASE'
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.1.RELEASE'
+
+	// hibernate artifact
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.18.Final'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.4.18.Final'
+
+	// jdbc
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
 
-	// https://mvnrepository.com/artifact/javax.servlet/jstl
-	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+	// servlet
+	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
-}
+	// testing artifact
+	testCompile group: 'org.spockframework', name: 'spock-core', version: '1.3-groovy-2.5'
+	testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.3-groovy-2.5'
 
-def runCommand(d, f) {
-	ProcessBuilder pb = new ProcessBuilder('cmd', '/C', f)
-	pb.directory(file(d))
-	pb.start()
-}
-
-war {
-	archiveName = war_name
-}
-
-task deploy(type: Copy) {
-	from 'build/libs'
-	into tomcat_home + '/webapps'
-	include '**/' + war_name
-}
-
-task shutdown {
-	doLast {
-		runCommand(tomcat_home + '/bin', 'shutdown.bat')
-	}
-}
-
-task clear(type: Delete) {
-	delete fileTree(dir: tomcat_home + '/webapps', include: war_name)
-}
-
-task startup {
-	doLast {
-		runCommand(tomcat_home + '/bin', 'startup.bat')
-	}
-}
-
-task reboot(dependsOn: [shutdown, startup]) {
 	
+	// Lombok Artifact
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	testCompileOnly 'org.projectlombok:lombok:1.18.12'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+}
+
+bootWar {
+	mainClassName = 'net.coolblossom.lycee.app.web.ApplicationMain'
 }
 
