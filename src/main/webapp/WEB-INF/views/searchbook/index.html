@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+</head>
+<body>
+<h1>書籍検索</h1>
+
+
+<form th:action="@{/search}" method="GET">
+	<table>
+		<tr>
+			<th>キーワード</th><td><input type="text" name="keyword" th:value="${keyword}"/></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="submit" value="検索" /></td>
+		</tr>
+	</table>
+</form>
+
+<table border="1">
+<tr>
+	<th>書籍ID</th>
+	<th>書籍名</th>
+	<th>著者名</th>
+	<th>出版社名</th>
+</tr>
+<tr th:each="book : ${bookList}">
+	<td th:text="${book.bookId}">1</td>
+	<td><a th:text="${book.bookName}"th:href="@{'/search/detail/'+${book.bookId}}">吾輩は猫である</a></td>
+	<td th:text="${book.author.authorName}">夏目漱石</td>
+	<td th:text="${book.publisher.publisherName}">ちくま文庫、筑摩書房</td>
+</tr>
+</table>
+
+</body>
+</html>
