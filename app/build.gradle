@@ -1,0 +1,68 @@
+
+plugins {
+	id 'org.springframework.boot' version '2.2.4.RELEASE'
+	id "io.freefair.lombok" version "5.1.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'war'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'net.coolblossom.lycee.app'
+version = '0.0.1-PROTOTYPE'
+description = 'Lycee Web Library'
+
+sourceSets {
+
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+	test {
+		java {
+			srcDir 'src/test/groovy'
+		}
+	}
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	// utility
+	implementation group: 'com.google.guava', name:'guava', version: guavaVersion
+
+	// Spring boot
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: springBootVersion
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: springBootVersion
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+
+	// hibernate artifact
+	compile group: 'org.hibernate', name: 'hibernate-core', version: hibernateVersion
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateVersion
+
+	// jdbc
+	compile group: 'mysql', name: 'mysql-connector-java', version: mysqlConnectorVersion
+
+	// servlet
+	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: servletVersion
+
+	// testing artifact
+	testCompile group: 'org.spockframework', name: 'spock-core', version: spockVersion
+	testCompile group: 'org.spockframework', name: 'spock-spring', version: spockVersion
+
+	// Lombok Artifact
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+}
+
+bootWar {
+	mainClassName = 'net.coolblossom.lycee.app.web.ApplicationMain'
+}
+
