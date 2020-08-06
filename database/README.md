@@ -44,3 +44,5 @@ load data local infile '/datasets/users.csv' into table users fields terminated 
 ## 永続化データについて
 コンテナを実行すると永続化データをマウントさせてあるdatabase/volumesのディレクトリに退避するようになっています．
 そのため，コンテナを作り直してもデータは残り続けます．
+
+DB自体をリセットしたい場合は，コンテナを停止してvolumesディレクトリごと消したのち，コンテナを起動させてください．
