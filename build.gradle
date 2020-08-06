@@ -1,4 +1,15 @@
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
 ext {
     springBootVersion = '2.3.1.RELEASE'
 
@@ -11,3 +22,17 @@ ext {
 
     guavaVersion = '29.0-jre'
 }
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+}
+
