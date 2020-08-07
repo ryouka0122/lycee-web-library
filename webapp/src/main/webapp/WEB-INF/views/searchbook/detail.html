@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+</head>
+<body>
+<h1>書籍詳細情報</h1>
+
+<table border="1">
+<tr>
+	<th>書籍ID</th>
+	<td th:text="${bookInfo.bookId}">1</td>
+</tr>
+<tr>
+	<th>書籍名</th>
+	<td th:text="${bookInfo.bookName}">吾輩は猫である</td>
+</tr>
+<tr>
+	<th>著者名</th>
+	<td th:text="${bookInfo.author.authorName}">夏目漱石</td>
+</tr>
+<tr>
+	<th>出版社名</th>
+	<td th:text="${bookInfo.publisher.publisherName}">ちくま文庫、筑摩書房</td>
+</tr>
+</table>
+
+<form th:action="@{ '/book/modify/'+ ${bookInfo.bookId} }" method="GET">
+	<input type="hidden" name="ret" th:value="${retValue}" />
+	<input type="submit" value="変更" />
+</form>
+<br/>
+
+</body>
+</html>

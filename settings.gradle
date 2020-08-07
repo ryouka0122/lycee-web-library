@@ -1,0 +1,3 @@
+rootProject.name = 'lycee-web-library'
+
+include 'webapp'

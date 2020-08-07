@@ -2,54 +2,47 @@
 
 開発の仕方は以下のような流れ
 
-1. Eclipseでコード開発
-2. gradleでwar作成
-3. gradleを使ってTomcatにデプロイ
-4. gradleでTomcatの起動/停止
-5. ブラウザで動作確認
+1. 環境構築
+2. コード開発
+3. gradleでwar作成
+4. Webアプリ起動
+6. ブラウザで動作確認
 
 
-## gradleの使い方
-### Eclipse用プロジェクトの作成
-```
-gradle eclipse
+# プロジェクトの中身について
+
+一式揃ってる状態になってます．  
+必要なツールをインストールすれば，すぐに開発できるようなります．
+
+## インストールするもの
+* Gradle
+* IntelliJ (Eclipseでも代用可だが未確認)
+* Docker
+
+## プロジェクトの構成
+ここには，Webアプリとデータベースの2つが入ってます．
+
+### Webアプリ
+webappディレクトリのなかに全て入ってます．  
+Spring Bootを使用したプロジェクトです．
+
+ビルド成果物は，Tomcat同封warとなります．  
+なので，warファイルを実行すれば，サーバーが起動します．
+
+```bash
+java -jar webapp/build/libs/webapp.jar
 ```
 
-### ビルド（warファイルの作成）
-```
-gradle war
+### データベース
+databaseディレクトリの中に全て入ってます．  
+Dockerを利用してMariaDBを使うようにしてあります．
+
+コンテナ作成は以下のようにします．
+```bash
+docker-compose up --no-start
 ```
 
-### デプロイ
-このタスクでは環境変数に `TOMCAT_HOME` があり，そのディレクトリを起点にデプロイします．
-```
-gradle deploy
-```
-
-### Tomcatの起動/停止
-```
-# Tomcatの停止
-gradle shutdown
-
-# Tomcatの起動
-gradle startup
-
-# Tomcatの再起動(内部ではshutdownとstartupを呼びだしているだけ)
-gradle reboot
-```
-
-### ビルドから起動まで
-```
-gradle war shutdown deploy startup
-```
-
-
-# Misc.
-## Tomcatのログが文字化けする
-{TOMCAT_HOME}/conf/logging.propertiesがcatalina.outのログ設定ファイルとなっている．
-UTF-8設定にあっているがWindowsのコンソールがSJISになっているため，文字コードが合わず化けてしまう．
-以下のように変えることで文字化けを解消することが出来る（変更後Tomcat再起動が必要）
-```
-#java.util.logging.ConsoleHandler.encoding = UTF-8
-java.util.logging.ConsoleHandler.encoding = SJIS
+起動は，次のコマンド
+```bash
+docker-compose up -d
 ```
